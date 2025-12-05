@@ -42,7 +42,7 @@ public class BookController {
         return bookService.updateBook(bookId, updatedBook);
     }
 
-    // 책 삭제
+    // 책 삭제 test
     @DeleteMapping("/{bookId}")
     public void deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);
