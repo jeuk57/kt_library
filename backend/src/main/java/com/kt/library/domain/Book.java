@@ -1,5 +1,6 @@
 package com.kt.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,19 +22,20 @@ public class Book {
     @Column(name = "BOOK_ID")   // DB 컬럼명
     private Long id;
 
-//    // 외래키 (FK)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "USER_ID")
-//    private User user;
+    // 외래키 (FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
     // 책 제목 (NOT NULL)
     @Column(name = "TITLE", nullable = false, length = 255)
     private String title;
 
-//    // 표지
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "IMAGE_ID")
-//    private Image image;
+    // 표지
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "IMAGE_ID")
+    private Image image;
 
     // 내용 (NOT NULL, 길이가 길 수 있으니 TEXT로 설정)
     @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
