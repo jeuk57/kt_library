@@ -1,77 +1,90 @@
 package com.kt.library.service.impl;
 
 import com.kt.library.domain.Book;
+import com.kt.library.dto.request.BookCreateRequest;
+import com.kt.library.dto.request.BookUpdateRequest;
+import com.kt.library.dto.response.BookResponse;
 import com.kt.library.repository.BookRepository;
 import com.kt.library.service.BookService;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
-// BookService interface에서 정의한 기능들을 실제 구현하는 클래스
 @Service
-@RequiredArgsConstructor // BookRepository 생성자 자동 주입
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
-    // DB와 연결되는 저장소. 책 저장,조회,삭제 기능을 제공
     private final BookRepository bookRepository;
 
-    // 사용자가 입력한 제목, 내용, 장르 등으로 새로운 책을 DB에 저장한다.
+    // 생성
     @Override
-    public Book createBook(Book book) {
-        // DB에 저장
-        return bookRepository.save(book);
+    public BookResponse createBook(BookCreateRequest request) {
+
+        Book book = new Book();
+        book.setTitle(request.getTitle());
+        book.setContent(request.getContent());
+        book.setLanguage(request.getLanguage());
+        book.setGenre(request.getGenre());
+
+        Book saved = bookRepository.save(book);
+        return toResponse(saved);
     }
 
-
-    // bookid로 책 조회
+    // 책 하나 조회
     @Override
-    public Book getBook(Long id) {
-
-        // findById는 Optional 반환 → 없으면 예외 발생시킴
-        return bookRepository.findById(id)
+    public BookResponse getBook(Long id) {
+        Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 책을 찾을 수 없습니다."));
+        return toResponse(book);
     }
 
-
-    // 전체 도서 목록 조회
+    // 전체 조회
     @Override
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public List<BookResponse> getAllBooks() {
+        return bookRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
-
-
-    // 해당 ID의 책을 찾아서 제목/내용/장르 등을 변경
+    // 수정
     @Override
-    public Book updateBook(Long id, Book updatedBook) {
+    public BookResponse updateBook(Long id, BookUpdateRequest request) {
 
-        // 기존 데이터 먼저 가져오기
-        Book book = getBook(id);
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 책을 찾을 수 없습니다."));
 
-        // 명세서에 있는 필드들만 수정
-        if (updatedBook.getTitle() != null)   book.setTitle(updatedBook.getTitle());
-        if (updatedBook.getContent() != null) book.setContent(updatedBook.getContent());
-        if (updatedBook.getGenre() != null)   book.setGenre(updatedBook.getGenre());
-        if (updatedBook.getLanguage() != null)book.setLanguage(updatedBook.getLanguage());
+        if (request.getTitle() != null)   book.setTitle(request.getTitle());
+        if (request.getContent() != null) book.setContent(request.getContent());
+        if (request.getLanguage() != null) book.setLanguage(request.getLanguage());
+        if (request.getGenre() != null)   book.setGenre(request.getGenre());
 
-
-        // 변경된 값을 다시 저장
-        return bookRepository.save(book);
+        Book updated = bookRepository.save(book);
+        return toResponse(updated);
     }
 
-
-
-    // bookId에 해당하는 책을 삭제
+    // 삭제
     @Override
     public void deleteBook(Long id) {
 
-        // 존재 여부 확인 (없으면 에러 발생)
-        Book book = getBook(id);
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 책을 찾을 수 없습니다."));
 
-        // 삭제 수행
         bookRepository.delete(book);
+    }
+
+    // Entity → Response DTO 변환 공통 메서드
+    private BookResponse toResponse(Book book) {
+        return new BookResponse(
+                book.getId(),
+                book.getTitle(),
+                book.getContent(),
+                book.getLanguage(),
+                book.getGenre(),
+                book.getCreateDate(),
+                book.getUpdateDate()
+        );
     }
 }

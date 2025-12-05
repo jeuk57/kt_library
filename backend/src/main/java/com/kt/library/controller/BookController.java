@@ -23,8 +23,8 @@ public class BookController {
 
     // 상세조회
     @GetMapping("/{bookId}")
-    public Book getBook(@PathVariable Long bookId) {
-        return bookService.getBook(bookId);
+    public Book getBook(@PathVariable Long id) {
+        return bookService.getBook(id);
     }
 
     // 책 등록
@@ -36,15 +36,15 @@ public class BookController {
     // 책 수정
     @PutMapping("/{bookId}")
     public Book updateBook(
-            @PathVariable Long bookId,
+            @PathVariable Long id,
             @RequestBody Book updatedBook
     ) {
-        return bookService.updateBook(bookId, updatedBook);
+        return bookService.updateBook(id, updatedBook);
     }
 
     // 책 삭제
-    @DeleteMapping("/{bookId}")
-    public void deleteBook(@PathVariable Long bookId) {
-        bookService.deleteBook(bookId);
+    @DeleteMapping("/{id}")
+    public void deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
     }
 }
