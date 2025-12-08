@@ -5,35 +5,41 @@ import { mockBooks } from '../data/mockBooks';
 
 export default function BookCreate() {
     const { id } = useParams(); // URL에서 id 가져오기
-    const navigate = useNavigate(); //페이지 이동 도구 준비
-    const isEditMode = !!id; // id가 있으면 등록페이지를 수정모드로 전황
+    const navigate = useNavigate(); // 페이지 이동 도구 준비
+    const isEditMode = !!id; // id가 있으면 수정 모드
 
+    // 폼 데이터 상태
     const [formData, setFormData] = useState({
         title: '',
         language: '',
         genre: '',
         content: ''
-    }); //기억해줄 값(수정페이지에서 사용)
+    });
 
     const [coverImage, setCoverImage] = useState(null);
     const [isGenerating, setIsGenerating] = useState(false);
 
     // 수정 모드일 때 기존 데이터 불러오기
-    useEffect(() => { //페이지가 열릴때 자동으로 실행
-        if (isEditMode) { //수정모드일때만 실행
-            const book = mockBooks.find(b => b.id === parseInt(id));
-            if (book) {
-                setFormData({
-                    title: book.title || '',
-                    language: '한국어', // Mock 데이터에 없으면 기본값
-                    genre: book.genre || '',
-                    content: book.description || ''
-                });
-                setCoverImage(book.coverImage || null);
-            }
+    useEffect(() => {
+        // 수정 모드가 아니거나 id가 없으면 실행 안 함
+        if (!isEditMode || !id) return;
+
+        // mockBooks에서 해당 책 찾기
+        const book = mockBooks.find(b => b.id === parseInt(id));
+
+        // 책을 찾았으면 폼에 데이터 채우기
+        if (book) {
+            setFormData({
+                title: book.title || '',
+                language: book.language || '한국어', // mockBooks에서 가져오기
+                genre: book.genre || '',
+                content: book.description || ''
+            });
+            setCoverImage(book.coverImage || null);
         }
     }, [id, isEditMode]);
 
+    // 입력값 변경 처리
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -41,6 +47,7 @@ export default function BookCreate() {
         });
     };
 
+    // 표지 생성 (Mock)
     const handleGenerateCover = () => {
         setIsGenerating(true);
         setTimeout(() => {
@@ -50,18 +57,24 @@ export default function BookCreate() {
         }, 2000);
     };
 
+    // 등록/수정 처리
     const handleSubmit = () => {
+        // 표지가 없으면 경고
         if (!coverImage) {
             alert('먼저 표지를 생성해주세요!');
             return;
         }
 
+        // 콘솔에 데이터 출력 (개발용)
         console.log(isEditMode ? '수정 데이터:' : '등록 데이터:', {
             ...formData,
             coverImage
         });
 
+        // 성공 메시지
         alert(isEditMode ? '도서가 수정되었습니다!' : '도서가 등록되었습니다!');
+
+        // 마이페이지로 이동
         navigate('/mypage');
     };
 
@@ -76,7 +89,7 @@ export default function BookCreate() {
                 maxWidth: 1100,
                 mx: 'auto'
             }}>
-                {/* 제목 */}
+                {/* 페이지 제목 */}
                 <Typography
                     variant="h4"
                     sx={{
