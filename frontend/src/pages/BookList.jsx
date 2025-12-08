@@ -1,84 +1,102 @@
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { useState, useEffect } from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 
-// ⭐ 제거: Mock을 제거하고 API로 데이터 불러오기
-// import { mockBooks } from "../data/mockBooks";
-// import { useState } from "react";
-
-// ⭐ 추가: Mock을 제거하고 API로 데이터 불러오기
-import { useEffect, useState } from "react";
-// ⭐ 추가: bookService에서 데이터 불러오기
 import { getBooks, deleteBook } from "../services/bookService";
 
-// ⭐ 변경: Mock이 아닌 API로 데이터 불러오기
 export default function BookList() {
     const [books, setBooks] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    useEffect(() => {
-        getBooks().then(setBooks);
-    }, []);
-
-    const handleDelete = async (id) => {
-        await deleteBook(id);
-        setBooks(prev => prev.filter(book => book.id !== id));
+    // 📌 API에서 목록 불러오기
+    const loadBooks = async () => {
+        try {
+            const data = await getBooks();
+            setBooks(data);
+        } catch (e) {
+            console.error("책 목록 로드 실패:", e);
+        }
     };
 
-// export default function BookList() {
-//
-//     // ⭐ 변경점 1: mockBooks 를 상태로 변환하여 화면이 갱신되도록 함
-//     const [books, setBooks] = useState(mockBooks);
-//
-//     // ⭐ 변경점 2: 삭제 기능 추가
-//     // 클릭된 책의 id를 받아서 books 배열에서 해당 항목 제거
-//     const handleDelete = (id) => {
-//         const updatedBooks = books.filter((book) => book.id !== id);
-//         setBooks(updatedBooks); // 상태 업데이트 → 화면 자동 갱신
-//     };
+    // 📌 첫 로딩 시 전체 목록 가져오기
+    useEffect(() => {
+        loadBooks();
+    }, []);
+
+    // 📌 검색어 적용된 결과 필터링
+    const filteredBooks = books.filter(
+        (book) =>
+            book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            book.author.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // 📌 삭제 기능 (API + UI 반영)
+    const handleDelete = async (id) => {
+        try {
+            await deleteBook(id);
+            setBooks((prev) => prev.filter((book) => book.id !== id));
+        } catch (e) {
+            console.error("삭제 실패:", e);
+        }
+    };
 
     return (
-        <div>
+        <Box sx={{ p: 3 }}>
             <h2>도서 목록</h2>
+
+            {/* 검색창 */}
+            <TextField
+                fullWidth
+                label="도서 검색 (제목 또는 저자)"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ mb: 3 }}
+            />
 
             <TableContainer component={Paper}>
                 <Table>
-
-                    {/* ⭐ 변경점 3: 테이블 헤더에 '삭제' 컬럼 추가 */}
                     <TableHead>
                         <TableRow>
                             <TableCell>ID</TableCell>
                             <TableCell>제목</TableCell>
                             <TableCell>저자</TableCell>
-                            <TableCell>삭제</TableCell> {/* ← 추가됨 */}
+                            <TableCell>삭제</TableCell>
                         </TableRow>
                     </TableHead>
 
                     <TableBody>
-
-                        {/* ⭐ 변경점 4: mockBooks → books 로 렌더링 데이터 변경 */}
-                        {books.map((book) => (
-                            <TableRow key={book.id}>
-                                <TableCell>{book.id}</TableCell>
-                                <TableCell>{book.title}</TableCell>
-                                <TableCell>{book.author}</TableCell>
-
-                                {/* ⭐ 변경점 5: 삭제 버튼 추가 */}
-                                <TableCell>
-                                    <button onClick={() => handleDelete(book.id)}>
-                                        삭제
-                                    </button>
+                        {filteredBooks.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={4} align="center">
+                                    검색 결과가 없습니다.
                                 </TableCell>
-
                             </TableRow>
-                        ))}
+                        ) : (
+                            filteredBooks.map((book) => (
+                                <TableRow key={book.id}>
+                                    <TableCell>{book.id}</TableCell>
+                                    <TableCell>{book.title}</TableCell>
+                                    <TableCell>{book.author}</TableCell>
 
+                                    <TableCell>
+                                        <button onClick={() => handleDelete(book.id)}>
+                                            삭제
+                                        </button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
-        </div>
+        </Box>
     );
 }

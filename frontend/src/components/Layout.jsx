@@ -45,7 +45,10 @@ export default function Layout({ children }) {
                     </Link>
 
                     <div className="nav-links">
-                        <button className="nav-link active">내 서재</button>
+                        {/* 내 서재 → 마이페이지로 연결 */}
+                        <Link to="/mypage" className="nav-link active" style={{ textDecoration: 'none' }}>
+                            내 서재
+                        </Link>
                         <button className="nav-link">관리</button>
                         <button className="nav-link">관심</button>
                     </div>
