@@ -7,7 +7,7 @@ export default function Signup() {
 
     const [formData, setFormData] = useState({
         name: '',
-        username: '',   // ← 백엔드에서 id가 username이면 이렇게 변경
+        loginId: '',   // ★ 변경됨 (username → loginId)
         password: '',
         confirmPassword: '',
         email: ''
@@ -23,16 +23,15 @@ export default function Signup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 비밀번호 일치 검사
         if (formData.password !== formData.confirmPassword) {
             alert('비밀번호가 일치하지 않습니다.');
             return;
         }
 
-        // 서버에 보낼 DTO
+        // 백엔드 UserSignupRequest DTO 형식 그대로 보내기
         const dto = {
             name: formData.name,
-            username: formData.username,
+            loginId: formData.loginId,   // ★ 백엔드 필드명과 동일하게
             password: formData.password,
             email: formData.email
         };
@@ -45,7 +44,6 @@ export default function Signup() {
             navigate('/login');
         } catch (err) {
             console.error(err);
-
             alert(err.response?.data?.message || "회원가입 중 오류가 발생했습니다.");
         }
     };
@@ -73,10 +71,10 @@ export default function Signup() {
                         아이디
                         <input
                             type="text"
-                            name="username"
+                            name="loginId"   // ★ 여기서도 loginId로 변경
                             className="login-input"
                             placeholder="user123"
-                            value={formData.username}
+                            value={formData.loginId}
                             onChange={handleChange}
                             required
                         />
@@ -125,16 +123,9 @@ export default function Signup() {
                         회원가입
                     </button>
 
-                    <p
-                        style={{
-                            textAlign: "center",
-                            marginTop: "16px",
-                            fontSize: "14px",
-                            color: "#666"
-                        }}
-                    >
+                    <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px', color: '#666' }}>
                         이미 회원이신가요?{" "}
-                        <Link to="/login" style={{ color: "#4285f4", textDecoration: "none", fontWeight: "500" }}>
+                        <Link to="/login" style={{ color: '#4285f4', textDecoration: 'none', fontWeight: '500' }}>
                             로그인
                         </Link>
                     </p>
