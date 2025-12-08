@@ -3,11 +3,6 @@ import { useState } from "react";
 import logo from "../assets/logo.png";
 import { mockBooks } from "../data/mockBooks";
 
-/**
- * 공통 레이아웃
- * - 상단 네비게이션(로고/탭/검색/로그인)
- * - 검색: 제목/저자 부분 일치 시 첫 도서 상세로 이동
- */
 export default function Layout({ children }) {
     const [query, setQuery] = useState("");
     const navigate = useNavigate();
@@ -39,7 +34,10 @@ export default function Layout({ children }) {
                         </div>
                     </Link>
                     <div className="nav-links">
-                        <button className="nav-link active">내 서재</button>
+                        {/* 내 서재 → 마이페이지로 연결 */}
+                        <Link to="/mypage" className="nav-link active" style={{ textDecoration: 'none' }}>
+                            내 서재
+                        </Link>
                         <button className="nav-link">관리</button>
                         <button className="nav-link">관심</button>
                     </div>

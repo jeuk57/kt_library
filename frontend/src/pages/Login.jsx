@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function Login() {
     return (
         <div className="login-page">
@@ -13,6 +15,16 @@ export default function Login() {
                         <input type="password" className="login-input" placeholder="••••••••" />
                     </label>
                     <button type="submit" className="primary-btn full">로그인</button>
+
+                    {/* 회원가입 링크 추가 */}
+                    <p style={{
+                        textAlign: 'center',
+                        marginTop: '16px',
+                        fontSize: '14px',
+                        color: '#666'
+                    }}>
+                        아직 회원이 아니라면? <Link to="/signup" style={{ color: '#4285f4', textDecoration: 'none', fontWeight: '500' }}>회원가입</Link>
+                    </p>
                 </form>
             </div>
         </div>
