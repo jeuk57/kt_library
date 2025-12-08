@@ -13,7 +13,8 @@ export default function BookCreate() {
         title: '',
         language: '',
         genre: '',
-        content: ''
+        content: '',
+        introduction: ''
     });
 
     const [coverImage, setCoverImage] = useState(null);
@@ -33,7 +34,8 @@ export default function BookCreate() {
                 title: book.title || '',
                 language: book.language || '한국어', // mockBooks에서 가져오기
                 genre: book.genre || '',
-                content: book.description || ''
+                content: book.description || '',
+                introduction: book.introduction || ''
             });
             setCoverImage(book.coverImage || null);
         }
@@ -120,8 +122,8 @@ export default function BookCreate() {
                         <Paper
                             elevation={0}
                             sx={{
-                                width: 320,
-                                height: 450,
+                                width: 480,
+                                height: 675,
                                 bgcolor: '#e9ecef',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -234,16 +236,56 @@ export default function BookCreate() {
                             {/* 3. 장르 */}
                             <Box>
                                 <Typography variant="body1" sx={{ mb: 1.5, fontWeight: 600, fontSize: '15px', color: '#495057' }}>
-                                    3. 장르를 입력하시오
+                                    3. 장르를 선택하시오
+                                </Typography>
+                                <FormControl fullWidth size="small">
+                                    <Select
+                                        //fullWidth
+                                        name="genre"
+                                        value={formData.genre}
+                                        onChange={handleChange}
+                                        //placeholder="예: 판타지, 로맨스, SF"
+                                        //variant="outlined"
+                                        //size="small"
+                                        displayEmpty
+                                        sx={{
+                                            //'& .MuiOutlinedInput-root': {
+                                            bgcolor: '#f1f3f5',
+                                            borderRadius: 1.5,
+                                            '& fieldset': {
+                                                border: 'none'
+                                            }
+                                            //}
+                                        }}
+                                    >
+                                        <MenuItem value="" disabled>장르를 선택하세요</MenuItem>
+                                        <MenuItem value="SF">SF</MenuItem>
+                                        <MenuItem value="로맨스">로맨스</MenuItem>
+                                        <MenuItem value="공포">공포</MenuItem>
+                                        <MenuItem value="추리">추리</MenuItem>
+                                        <MenuItem value="개그">개그</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                            </Box>
+
+                            {/* 4. 소개글 */}
+                            <Box>
+                                <Typography variant="body1" sx={{ mb: 1.5, fontWeight: 600, fontSize: '15px', color: '#495057' }}>
+                                    4. 소개글을 입력하시오(200자 이내)
                                 </Typography>
                                 <TextField
                                     fullWidth
-                                    name="genre"
-                                    value={formData.genre}
+                                    name="introduction"
+                                    value={formData.introduction}
                                     onChange={handleChange}
-                                    placeholder="예: 판타지, 로맨스, SF"
+                                    multiline
+                                    rows={4}
+                                    placeholder="책의 소개글을 입력해주세요"
                                     variant="outlined"
-                                    size="small"
+                                    inputProps = {{ // 200자 넘어가면 쓰지 못하도록
+                                        maxLength : 200
+                                    }}
                                     sx={{
                                         '& .MuiOutlinedInput-root': {
                                             bgcolor: '#f1f3f5',
@@ -254,12 +296,26 @@ export default function BookCreate() {
                                         }
                                     }}
                                 />
+
+                                {/* 글자 수 표시 */}
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        display: "block",
+                                        textAlign: "right",
+                                        mt: 0.5,
+                                        mr: 0.5,
+                                        color: "#868e96",
+                                    }}
+                                >
+                                    {`${formData.introduction?.length || 0} / 200`}
+                                </Typography>
                             </Box>
 
-                            {/* 4. 내용 */}
+                            {/* 5. 내용 */}
                             <Box>
                                 <Typography variant="body1" sx={{ mb: 1.5, fontWeight: 600, fontSize: '15px', color: '#495057' }}>
-                                    4. 내용을 입력하시오
+                                    5. 내용을 입력하시오
                                 </Typography>
                                 <TextField
                                     fullWidth
