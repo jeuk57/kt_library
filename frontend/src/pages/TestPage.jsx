@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { fetchBooks } from '../services/bookService';
+import { getBooks } from '../services/bookService'; // ✅ fetchBooks → getBooks
 
 export default function TestPage() {
     const [result, setResult] = useState(null);
@@ -7,7 +7,7 @@ export default function TestPage() {
 
     const testAPI = async () => {
         try {
-            const books = await fetchBooks();
+            const books = await getBooks();  // ✅ getBooks 사용
             console.log('✅ 성공:', books);
             setResult(JSON.stringify(books, null, 2));
             setError(null);
