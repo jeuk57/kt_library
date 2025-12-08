@@ -1,6 +1,25 @@
+import { useState } from "react";
+import { createBook } from "../services/bookService";
+import { useNavigate } from "react-router-dom";
 import { TextField, Button, Box } from "@mui/material";
 
 export default function BookCreate() {
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const navigate = useNavigate();
+
+    const handleSubmit = async () => {
+        const data = {
+            title,
+            content,
+            language: "KO",
+            genre: "NOVEL"
+        };
+
+        await createBook(data);
+        navigate("/books");
+    };
+
     return (
         <Box sx={{ maxWidth: 400, mt: 2 }}>
             <h2>도서 등록</h2>
@@ -9,17 +28,17 @@ export default function BookCreate() {
                 label="제목"
                 fullWidth
                 margin="normal"
-                variant="outlined"
+                onChange={(e) => setTitle(e.target.value)}
             />
 
             <TextField
-                label="저자"
+                label="내용"
                 fullWidth
                 margin="normal"
-                variant="outlined"
+                onChange={(e) => setContent(e.target.value)}
             />
 
-            <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+            <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handleSubmit}>
                 등록하기
             </Button>
         </Box>

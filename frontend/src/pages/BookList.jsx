@@ -6,20 +6,39 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import { mockBooks } from "../data/mockBooks";
+// ⭐ 제거: Mock을 제거하고 API로 데이터 불러오기
+// import { mockBooks } from "../data/mockBooks";
 import { useState } from "react";
 
+// ⭐ 추가: Mock을 제거하고 API로 데이터 불러오기
+import { useEffect, useState } from "react";
+// ⭐ 추가: bookService에서 데이터 불러오기
+import { getBooks, deleteBook } from "../services/bookService";
+
+// ⭐ 변경: Mock이 아닌 API로 데이터 불러오기
 export default function BookList() {
+    const [books, setBooks] = useState([]);
 
-    // ⭐ 변경점 1: mockBooks 를 상태로 변환하여 화면이 갱신되도록 함
-    const [books, setBooks] = useState(mockBooks);
+    useEffect(() => {
+        getBooks().then(setBooks);
+    }, []);
 
-    // ⭐ 변경점 2: 삭제 기능 추가
-    // 클릭된 책의 id를 받아서 books 배열에서 해당 항목 제거
-    const handleDelete = (id) => {
-        const updatedBooks = books.filter((book) => book.id !== id);
-        setBooks(updatedBooks); // 상태 업데이트 → 화면 자동 갱신
+    const handleDelete = async (id) => {
+        await deleteBook(id);
+        setBooks(prev => prev.filter(book => book.id !== id));
     };
+
+// export default function BookList() {
+//
+//     // ⭐ 변경점 1: mockBooks 를 상태로 변환하여 화면이 갱신되도록 함
+//     const [books, setBooks] = useState(mockBooks);
+//
+//     // ⭐ 변경점 2: 삭제 기능 추가
+//     // 클릭된 책의 id를 받아서 books 배열에서 해당 항목 제거
+//     const handleDelete = (id) => {
+//         const updatedBooks = books.filter((book) => book.id !== id);
+//         setBooks(updatedBooks); // 상태 업데이트 → 화면 자동 갱신
+//     };
 
     return (
         <div>
