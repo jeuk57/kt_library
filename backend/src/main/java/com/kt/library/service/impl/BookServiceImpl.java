@@ -1,10 +1,12 @@
 package com.kt.library.service.impl;
 
 import com.kt.library.domain.Book;
+import com.kt.library.domain.User;
 import com.kt.library.dto.request.BookCreateRequest;
 import com.kt.library.dto.request.BookUpdateRequest;
 import com.kt.library.dto.response.BookResponse;
 import com.kt.library.repository.BookRepository;
+import com.kt.library.repository.UserRepository;
 import com.kt.library.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,16 +19,23 @@ import java.util.stream.Collectors;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
 
     // 생성
     @Override
-    public BookResponse createBook(BookCreateRequest request) {
+    public BookResponse createBook(BookCreateRequest request, Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         Book book = new Book();
         book.setTitle(request.getTitle());
         book.setContent(request.getContent());
         book.setLanguage(request.getLanguage());
         book.setGenre(request.getGenre());
+        book.setUser(user);
+        book.setAuthor(user.getName());
+
 
         Book saved = bookRepository.save(book);
         return toResponse(saved);

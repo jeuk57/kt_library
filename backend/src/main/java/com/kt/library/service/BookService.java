@@ -10,9 +10,9 @@ import java.util.List;
 // Book 관련 기능을 모은 interface
 public interface BookService {
 
-    // 새로운 책 등록
+    // 파라미터에 Long userId 추가
     @Transactional
-    BookResponse createBook(BookCreateRequest request);
+    BookResponse createBook(BookCreateRequest request, Long userId);
 
     // 책 조회
     BookResponse getBook(Long id);

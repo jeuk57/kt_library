@@ -3,6 +3,8 @@ package com.kt.library.controller;
 import com.kt.library.dto.request.CommentCreateRequest;
 import com.kt.library.dto.request.CommentUpdateRequest;
 import com.kt.library.dto.response.CommentResponse;
+import com.kt.library.dto.response.UserResponse;
+import com.kt.library.exception.UnAuthorizedException;
 import com.kt.library.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +21,15 @@ public class CommentController {
     // 댓글 생성
     @PostMapping("/{bookId}")
     public CommentResponse createComment(
-            @RequestParam Long userId,
+            @SessionAttribute(name = "loginUser", required = false) UserResponse loginUser,
             @PathVariable Long bookId,
             @RequestBody CommentCreateRequest request
     ) {
-        return commentService.createComment(userId, bookId, request);
+        if(loginUser == null){
+            throw new UnAuthorizedException("로그인이 필요합니다.");
+        }
+        // 서비스 호출 - 순서: userId, bookId, request
+        return commentService.createComment(loginUser.getId(), bookId, request);
     }
 
     // 책 기준 댓글 조회
