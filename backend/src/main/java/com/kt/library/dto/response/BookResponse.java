@@ -31,7 +31,11 @@ public class BookResponse {
                 book.getLanguage(),
                 book.getGenre(),
                 book.getCreateDate(),
-                book.getUpdateDate()
+                book.getUpdateDate(),
+                book.getCoverImageUrl()
         );
     }
+
+    // AI가 생성한 표지 이미지 URL
+    private String coverImageUrl;
 }
