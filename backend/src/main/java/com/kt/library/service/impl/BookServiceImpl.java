@@ -84,6 +84,20 @@ public class BookServiceImpl implements BookService {
         bookRepository.delete(book);
     }
 
+    @Override
+    public void updateCoverImage(Long bookId, String coverImageUrl) {
+
+        // DB에서 bookId에 해당하는 책 조회
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("해당 책을 찾을 수 없습니다."));
+
+        // AI가 생성한 이미지 URL 세팅
+        book.setCoverImageUrl(coverImageUrl);
+
+        // 업데이트된 책 정보를 DB에 저장
+        bookRepository.save(book);
+    }
+
     // Entity → Response DTO 변환 공통 메서드
     private BookResponse toResponse(Book book) {
         return new BookResponse(
@@ -94,7 +108,8 @@ public class BookServiceImpl implements BookService {
                 book.getLanguage(),
                 book.getGenre(),
                 book.getCreateDate(),
-                book.getUpdateDate()
+                book.getUpdateDate(),
+                book.getCoverImageUrl()
         );
     }
 }

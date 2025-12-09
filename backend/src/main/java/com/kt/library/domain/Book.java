@@ -83,4 +83,8 @@ public class Book {
     // 좋아요 수
     @Column(name = "LIKE_COUNT", nullable = false)
     private int likeCount = 0;
+
+    // OpenAI로 생성한 이미지 URL 저장
+    @Column(name = "COVER_IMAGE_URL")
+    private String coverImageUrl;
 }

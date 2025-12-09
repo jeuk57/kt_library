@@ -1,5 +1,6 @@
 package com.kt.library.controller;
 
+import com.kt.library.dto.request.BookCoverUrlRequest;
 import com.kt.library.dto.request.BookCreateRequest;
 import com.kt.library.dto.request.BookUpdateRequest;
 import com.kt.library.dto.response.BookResponse;
@@ -49,4 +50,12 @@ public class BookController {
     public void deleteBook(@PathVariable Long bookId) {
         bookService.deleteBook(bookId);
     }
+
+    // AI 이미지 URL 저장 API
+    // 프론트에서 bookId + coverImageUrl을 보내면 DB에 저장
+    @PutMapping("/ai-image")
+    public void updateAiImage(@RequestBody BookCoverUrlRequest request) {
+        bookService.updateCoverImage(request.getBookId(), request.getCoverImageUrl());
+    }
+
 }

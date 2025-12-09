@@ -20,4 +20,7 @@ public class BookResponse {
     private Book.Genre genre;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
+
+    // AI가 생성한 표지 이미지 URL
+    private String coverImageUrl;
 }
