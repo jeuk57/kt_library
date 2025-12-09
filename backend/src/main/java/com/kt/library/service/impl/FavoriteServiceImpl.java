@@ -3,12 +3,16 @@ package com.kt.library.service.impl;
 import com.kt.library.domain.Book;
 import com.kt.library.domain.Favorite;
 import com.kt.library.domain.User;
+import com.kt.library.dto.response.BookResponse;
 import com.kt.library.repository.BookRepository;
 import com.kt.library.repository.FavoriteRepository;
 import com.kt.library.repository.UserRepository;
 import com.kt.library.service.FavoriteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +37,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .orElse(null);
 
         if (favorite != null) {
-            // 이미 찜한 상태 → 찜 취소
+            // 찜 취소
             favoriteRepository.delete(favorite);
         } else {
             // 찜 추가
@@ -49,5 +53,21 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public Long getFavoriteCount(Long bookId) {
         return favoriteRepository.countByBookId(bookId);
+    }
+
+    // ⭐ 내 찜 목록 조회
+    @Override
+    public List<BookResponse> getMyFavorites(Long userId) {
+        List<Favorite> favorites = favoriteRepository.findByUserId(userId);
+
+        return favorites.stream()
+                .map(fav -> BookResponse.fromEntity(fav.getBook()))
+                .collect(Collectors.toList());
+    }
+
+    // ⭐ 찜 여부 확인
+    @Override
+    public boolean isFavorited(Long userId, Long bookId) {
+        return favoriteRepository.findByUserIdAndBookId(userId, bookId).isPresent();
     }
 }

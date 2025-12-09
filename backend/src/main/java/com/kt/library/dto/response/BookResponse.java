@@ -21,6 +21,7 @@ public class BookResponse {
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
+    // ★ 엔티티 → DTO 변환 메서드
     public static BookResponse fromEntity(Book book) {
         return new BookResponse(
                 book.getId(),
@@ -33,5 +34,4 @@ public class BookResponse {
                 book.getUpdateDate()
         );
     }
-
 }
