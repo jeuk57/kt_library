@@ -6,7 +6,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        loginId: "",
+        email: "",
         password: ""
     });
 
@@ -21,19 +21,22 @@ export default function Login() {
         e.preventDefault();
 
         const dto = {
-            loginId: formData.loginId,
+            email: formData.email,
             password: formData.password
         };
 
         try {
-            // ⭐ 로그인 결과 받아오기
+            // 로그인 API 호출
             const res = await login(dto);
 
-            // ✨ 로그인 정보 저장
+            // 로그인 정보 저장 (기존 코드 유지)
             localStorage.setItem("loginUser", JSON.stringify(res.data));
 
             alert("로그인 성공!");
-            navigate("/mypage");
+
+            // ✨ 페이지 새로고침으로 Layout 업데이트
+            window.location.href = "/mypage";
+
         } catch (err) {
             console.error(err);
             alert(err.response?.data?.message || "로그인 실패");
@@ -47,13 +50,13 @@ export default function Login() {
 
                 <form className="login-form" onSubmit={handleSubmit}>
                     <label className="login-label">
-                        아이디
+                        이메일
                         <input
-                            type="text"
-                            name="loginId"
+                            type="email"
+                            name="email"
                             className="login-input"
-                            placeholder=""
-                            value={formData.loginId}
+                            placeholder="you@example.com"
+                            value={formData.email}
                             onChange={handleChange}
                             required
                         />

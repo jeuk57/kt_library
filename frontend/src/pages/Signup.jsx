@@ -55,7 +55,7 @@ export default function Signup() {
 
                 <form className="login-form" onSubmit={handleSubmit}>
                     <label className="login-label">
-                        이름
+                        닉네임
                         <input
                             type="text"
                             name="name"

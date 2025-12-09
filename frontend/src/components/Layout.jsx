@@ -1,11 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
 import { getBooks } from "../services/bookService";
+import { logout, isLoggedIn } from "../services/authService"; // ← 추가!
 
 export default function Layout({ children }) {
     const [query, setQuery] = useState("");
+    const [loggedIn, setLoggedIn] = useState(false); // ← 추가!
     const navigate = useNavigate();
+
+    // 로그인 상태 확인 (컴포넌트 로드 시)
+    useEffect(() => {
+        setLoggedIn(isLoggedIn());
+    }, []);
 
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -15,7 +22,7 @@ export default function Layout({ children }) {
         const lower = keyword.toLowerCase();
 
         try {
-            const books = await getBooks(); // 🔥 API에서 전체 도서 목록 불러오기
+            const books = await getBooks();
 
             const target = books.find(
                 (b) =>
@@ -34,6 +41,19 @@ export default function Layout({ children }) {
         }
     };
 
+    // 로그아웃 처리 (추가!)
+    const handleLogout = async () => {
+        try {
+            await logout();
+            setLoggedIn(false);
+            alert("로그아웃 되었습니다.");
+            navigate("/");
+        } catch (error) {
+            console.error("로그아웃 에러:", error);
+            alert("로그아웃 중 오류가 발생했습니다.");
+        }
+    };
+
     return (
         <div className="layout">
             <header className="nav-bar">
@@ -45,7 +65,6 @@ export default function Layout({ children }) {
                     </Link>
 
                     <div className="nav-links">
-                        {/* 내 서재 → 마이페이지로 연결 */}
                         <Link to="/mypage" className="nav-link active" style={{ textDecoration: 'none' }}>
                             내 서재
                         </Link>
@@ -65,9 +84,16 @@ export default function Layout({ children }) {
                         <button type="submit" className="search-icon">&#128269;</button>
                     </form>
 
-                    <Link to="/login" className="login-btn">
-                        로그인
-                    </Link>
+                    {/* 로그인/로그아웃 버튼 전환 */}
+                    {loggedIn ? (
+                        <button onClick={handleLogout} className="login-btn">
+                            로그아웃
+                        </button>
+                    ) : (
+                        <Link to="/login" className="login-btn">
+                            로그인
+                        </Link>
+                    )}
                 </div>
             </header>
 
