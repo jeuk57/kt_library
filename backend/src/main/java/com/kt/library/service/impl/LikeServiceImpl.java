@@ -49,4 +49,8 @@ public class LikeServiceImpl implements LikeService {
 
         return true; // 좋아요 추가됨
     }
+
+    public int getLikeCount(Long bookId) {
+        return likeRepository.countByBookId(bookId);
+    }
 }

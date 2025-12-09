@@ -58,7 +58,7 @@ public class Book {
     private Genre genre;
 
     public enum Genre {
-        NOVEL, ESSAY, HISTORY, FANTASY
+        FANTASY, ROMANCE, THRILLER, SF
     }
 
     // 생성 날짜
