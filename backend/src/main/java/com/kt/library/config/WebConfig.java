@@ -32,7 +32,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 모든 API 경로 허용
-                .allowedOrigins("http://localhost:5173") // 프론트엔드 도메인
+                .allowedOrigins(
+                        "http://localhost:5173",
+                        "http://localhost:5174"
+                ) // 프론트엔드 도메인
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
