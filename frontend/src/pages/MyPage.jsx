@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getBooks, deleteBook } from "../services/bookService";
+import { getMyBooks, deleteBook } from "../services/bookService";
 
 export default function MyPage() {
     const [user, setUser] = useState(null);   // ⭐ 로그인 유저 상태
@@ -18,7 +18,7 @@ export default function MyPage() {
 
     const loadMyBooks = async () => {
         try {
-            const data = await getBooks();
+            const data = await getMyBooks();  // 🔥 전체책(X) → 내 책만(O)
             setMyBooks(data);
         } catch (error) {
             console.error("❌ 책 목록 불러오기 실패:", error);
