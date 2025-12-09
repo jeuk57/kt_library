@@ -16,9 +16,19 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        String requestURI = request.getRequestURI();
+        String method = request.getMethod();
+
         // 2. "GET 요청(조회)"은 로그인 안 해도 통과
-        if (request.getMethod().equals("GET")) {
-            return true;
+        // /books - 책목록, 상세 조회, 검색
+        // /comments - 댓글 목록 조회
+        // /favorites - 찜 개수 조회
+        if (method.equals("GET") && (
+                        requestURI.startsWith("/books") ||
+                        requestURI.startsWith("/comments") ||
+                        requestURI.startsWith("/favorites")
+        )) {
+            return true; // 로그인 검사 없이 통과
         }
 
         // 3. 세션 검사 - 없으면 null 반환
