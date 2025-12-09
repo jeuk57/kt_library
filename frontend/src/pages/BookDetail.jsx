@@ -17,16 +17,19 @@ export default function BookDetail() {
     const [book, setBook] = useState(null);
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
     const [favoriteCount, setFavoriteCount] = useState(0);
 
     const [comment, setComment] = useState("");
     const [comments, setComments] = useState([]);
+
 
     // 초기 로딩
     useEffect(() => {
         getBook(id).then(setBook);
         getComments(id).then(setComments);
         getFavoriteCount(id).then(setFavoriteCount);
+        getLikeCount(id).then(setLikeCount);
     }, [id]);
 
     if (!book) return <p>Loading...</p>;
@@ -99,12 +102,17 @@ export default function BookDetail() {
                         {/* 좋아요 */}
                         <IconButton
                             onClick={() =>
-                                toggleLike(id).then(() => setLiked(!liked))
+                                toggleLike(id).then(() => {
+                                    setLiked(!liked);
+                                    getLikeCount(id).then(setLikeCount);
+                                })
                             }
                             color="primary"
                         >
                             {liked ? <ThumbUpIcon /> : <ThumbUpOffAltIcon />}
                         </IconButton>
+
+                        <Typography>좋아요 수: {likeCount}</Typography>
 
                         {/* 즐겨찾기 */}
                         <IconButton
@@ -117,8 +125,6 @@ export default function BookDetail() {
                         >
                             {saved ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                         </IconButton>
-
-                        <Typography>찜 수: {favoriteCount}</Typography>
                     </Box>
                 </Box>
             </Box>

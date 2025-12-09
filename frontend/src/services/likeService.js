@@ -8,3 +8,7 @@ export function toggleLike(bookId) {
         { withCredentials: true }
     ).then(res => res.data);
 }
+export function getLikeCount(bookId) {
+    return axios.get(`${API}/books/${bookId}/like/count`)
+        .then(res => res.data);
+}
