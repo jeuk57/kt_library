@@ -51,7 +51,6 @@ public class FavoriteController {
             @PathVariable Long bookId,
             @SessionAttribute(name = "loginUser", required = false) UserResponse loginUser
     ) {
-        // 로그인 안 했으면 false로 처리
         if (loginUser == null) {
             return false;
         }

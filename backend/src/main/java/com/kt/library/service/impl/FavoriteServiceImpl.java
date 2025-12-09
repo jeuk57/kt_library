@@ -31,16 +31,13 @@ public class FavoriteServiceImpl implements FavoriteService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        // 이미 찜했는지 체크
         Favorite favorite = favoriteRepository
                 .findByUserIdAndBookId(userId, bookId)
                 .orElse(null);
 
         if (favorite != null) {
-            // 찜 취소
             favoriteRepository.delete(favorite);
         } else {
-            // 찜 추가
             favoriteRepository.save(
                     Favorite.builder()
                             .user(user)
@@ -55,7 +52,6 @@ public class FavoriteServiceImpl implements FavoriteService {
         return favoriteRepository.countByBookId(bookId);
     }
 
-    // ⭐ 내 찜 목록 조회
     @Override
     public List<BookResponse> getMyFavorites(Long userId) {
         List<Favorite> favorites = favoriteRepository.findByUserId(userId);
@@ -65,7 +61,6 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .collect(Collectors.toList());
     }
 
-    // ⭐ 찜 여부 확인
     @Override
     public boolean isFavorited(Long userId, Long bookId) {
         return favoriteRepository.findByUserIdAndBookId(userId, bookId).isPresent();
