@@ -79,6 +79,7 @@ export const deleteBook = async (id) => {
 
 // 내 책만 가져오기
 export function getMyBooks() {
-    return axios.get(`${API}/books/my`, { withCredentials: true })
+    return axios.get(`${API_BASE}/books/my`, { withCredentials: true })
         .then(res => res.data);
+
 }
