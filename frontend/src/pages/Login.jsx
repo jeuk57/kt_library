@@ -6,7 +6,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        email: "",
+        loginId: "",
         password: ""
     });
 
@@ -21,7 +21,7 @@ export default function Login() {
         e.preventDefault();
 
         const dto = {
-            email: formData.email,
+            loginId: formData.loginId,
             password: formData.password
         };
 
@@ -47,13 +47,13 @@ export default function Login() {
 
                 <form className="login-form" onSubmit={handleSubmit}>
                     <label className="login-label">
-                        이메일
+                        아이디
                         <input
-                            type="email"
-                            name="email"
+                            type="text"
+                            name="loginId"
                             className="login-input"
-                            placeholder="you@example.com"
-                            value={formData.email}
+                            placeholder=""
+                            value={formData.loginId}
                             onChange={handleChange}
                             required
                         />
