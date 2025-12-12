@@ -38,4 +38,13 @@ public class LikeController {
         if (loginUser == null) return false; // 로그인 안 했으면 당연히 좋아요 false
         return likeService.isLiked(bookId, loginUser.getId());
     }
+
+    @GetMapping("/{bookId}/is-liked")
+    public boolean isLiked(
+            @PathVariable Long bookId,
+            @SessionAttribute(name = "loginUser", required = false) UserResponse loginUser
+    ) {
+        if (loginUser == null) return false;
+        return likeService.isLiked(bookId, loginUser.getId());
+    }
 }
