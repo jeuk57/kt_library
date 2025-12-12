@@ -144,7 +144,7 @@ export default function BookDetail() {
                     </Box>
 
                     {/* 정보 그리드 */}
-                    <Box sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
+                    <Box sx={{ display: "flex", gap: 2 }}>
                         <Box sx={{ border: "1px solid #ccc", borderRadius: 1, p: 1 }}>저자: {book.author}</Box>
                         <Box sx={{ border: "1px solid #ccc", borderRadius: 1, p: 1 }}>
                             장르: {GENRE_LABEL[book.genre] || book.genre}</Box>
