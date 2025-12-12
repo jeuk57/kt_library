@@ -8,7 +8,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 
 import { getBook } from "../services/bookService";
-import { getLikeCount, toggleLike } from "../services/likeService";
+import { getLikeCount, toggleLike, checkLiked } from "../services/likeService";
 import { toggleFavorite, getFavoriteCount, checkFavorited } from "../services/favoriteService";
 import { getComments, createComment, deleteComment } from "../services/commentService";
 
